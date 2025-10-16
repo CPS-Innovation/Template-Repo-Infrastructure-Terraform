@@ -76,3 +76,12 @@ resource "azurerm_private_endpoint" "sa" {
     local.global_tags
   )
 }
+
+# Create storage containers for terraform state files
+resource "azurerm_storage_container" "sa" {
+  for_each = var.sa_environments
+
+  name                  = "tfstate"
+  storage_account_id    = azurerm_storage_account.sa[each.value].id
+  container_access_type = "private"
+}
