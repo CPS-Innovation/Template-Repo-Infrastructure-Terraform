@@ -1,4 +1,5 @@
-🚧 **UNDER CONSTRUCTION**
+> [!NOTE]
+> 🚧 **This template repo is under construction...**
 
 # Template IaC Repo for Azure with Terraform and Terragrunt
 
