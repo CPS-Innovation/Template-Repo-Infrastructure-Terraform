@@ -22,11 +22,10 @@ See [bootstrap/README.md](bootstrap/README.md) for full instructions.
 
 Once the basic infrastructure is provisioned, there are a few more prerequisites to obtain before you can provision a full environment. Please see [this confluence page](http://TODO/enter-url-for-the-confluence-page) for step-by-step guidance.
 
-### 2. Install Pre-Commit Hooks
+### 2. Enable Pre-Commit Hooks and Security Scan
 
+#### Pre-Commit
 This repository includes a .pre-commit-config.yaml file to enforce consistent formatting, linting, and validation before code is committed.
-
-#### Setup Instructions
 
 1. Install pre-commit (if not already installed):
     ```Shell
@@ -37,6 +36,9 @@ This repository includes a .pre-commit-config.yaml file to enforce consistent fo
     ```Shell
     pre-commit install
     ```
+
+#### Security Scan
+To ensure you follow CPS security policy, you must uncomment the contents of [.github\workflows\security.yml](.github\workflows\security.yml) before provisioning any environments.
 
 ### 3. Create and Configure an Environment
 
