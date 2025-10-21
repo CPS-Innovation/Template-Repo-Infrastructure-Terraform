@@ -15,18 +15,18 @@ variables:
   ado_agent_pool: # add agent pool name
 
 jobs:
-  - template: templates/terragrunt_plan.yml
-    parameters:
-      environment: $(environment)
-      module: applications
-      subscription: $(ado_service_connection)
-      agent_pool: $(ado_agent_pool)
-      plan_or_apply: plan
+- template: templates/terragrunt-plan-apply.yml
+  parameters:
+    environment: $(environment)
+    module: applications
+    subscription: $(ado_service_connection)
+    agent_pool: $(ado_agent_pool)
+    plan_or_apply: plan
 
-  - template: templates/terragrunt_plan.yml
-    parameters:
-      environment: $(environment)
-      module: base
-      subscription: $(ado_service_connection)
-      agent_pool: $(ado_agent_pool)
-      plan_or_apply: plan
+- template: templates/terragrunt-plan-apply.yml
+  parameters:
+    environment: $(environment)
+    module: base
+    subscription: $(ado_service_connection)
+    agent_pool: $(ado_agent_pool)
+    plan_or_apply: plan

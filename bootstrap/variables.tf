@@ -28,8 +28,7 @@ variable "sa_environments" {
   description = "The names of the environments requiring a terraform backend storage account provisioned. E.g. in a 'preprod' subscription, you may input [\"dev\", \"staging\"]."
 }
 
-variable "vmss_admin_password" {
-  type        = string
-  description = "The password to use for the local-administrator on this VMSS."
-  sensitive   = true
+variable "ssh_public_key_path" {
+  type = string
+  description = "The path of a public key from an SSH key-pair to be used for admin access to VMs within the Scale Set. E.g. \"~/.ssh/my_ssh_key.pub\""
 }
