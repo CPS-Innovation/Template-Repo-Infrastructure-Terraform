@@ -36,6 +36,16 @@ Before running these scripts, ensure the following are in place:
     cd path/to/bootstrap
    ```
 
+2. Make sure you are logged into your subscription
+    ```shell
+    # Use interactive login:
+    az login
+
+    # Or non-interactive:
+    az login -u <your azure account> -p <your password>
+    az account set --subscription <your subscription id>
+    ```
+
 2. Initialize Terraform
     ```Shell
     terraform init

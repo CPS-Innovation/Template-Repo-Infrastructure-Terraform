@@ -1,7 +1,7 @@
 # Associate the VNet with the CPS hub DNS resolvers
 resource "azurerm_virtual_network_dns_servers" "dns" {
   virtual_network_id = local.vnet_id
-  dns_servers        = ["10.8.0.6", "10.8.0.7"]
+  dns_servers        = ["10.14.136.4", "10.7.136.4"]
 }
 
 # Create a private dns zone for storage blob private endpoints
