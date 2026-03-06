@@ -52,9 +52,9 @@ Before running these scripts, ensure the following are in place:
     ```
 
 3. Add variable values:
-    - Make a copy of [example.tfvars](bootstrap/example.tfvars) and name it `local.tfvars` - this file name is set to be [ignored by git](.gitignore).
+    - Make a copy of [local.tfvars.example](bootstrap/example.tfvars) and name it `local.tfvars` - this file name is set to be [ignored by git](.gitignore).
         ```shell
-        cp ./example.tfvars ./local.tfvars
+        cp ./local.tfvars.example ./local.tfvars
         ```
     - Edit `local.tfvars` with required values.
     - Alternatively, use environment variables to provide required values.
@@ -62,7 +62,7 @@ Before running these scripts, ensure the following are in place:
 
 5. Apply the configuration
     ```Shell
-    terraform apply
+    terraform apply --var-file local.tfvars
     ```
 
 6. Confirm the plan and wait for provisioning to complete.

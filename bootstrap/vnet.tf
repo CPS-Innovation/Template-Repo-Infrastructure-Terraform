@@ -1,12 +1,4 @@
-# Reference the VNet created by the infra team.
-data "azurerm_virtual_network" "vnet" {
-  name                = var.vnet_name
-  resource_group_name = var.vnet_rg
-}
-
 locals {
-  location = data.azurerm_virtual_network.vnet.location
-  vnet_id  = data.azurerm_virtual_network.vnet.id
   global_tags = {
     project              = var.project_acronym
     managed_by_terraform = false
@@ -19,17 +11,31 @@ locals {
   )
 }
 
+resource "azurerm_resource_group" "vnet" {
+  name     = "rg-${var.project_acronym}-connectivity-${var.subscription_env}"
+  location = var.location
+  tags     = local.sub_scope_tags
+}
+
+resource "azurerm_virtual_network" "vnet" {
+  name                = "vnet-${var.project_acronym}-${var.subscription_env}"
+  location            = azurerm_resource_group.vnet.location
+  resource_group_name = azurerm_resource_group.vnet.name
+  address_space       = var.vnet_address_space
+  dns_servers         = var.dns_servers
+  tags                = local.sub_scope_tags
+}
+
 # Create a route table for the subscription
 resource "azurerm_route_table" "rt" {
-  name                = "rt-${var.project_acronym}-${subscription_env}"
-  location            = local.location
-  resource_group_name = var.vnet_rg
-
+  name                = "rt-${var.project_acronym}-${var.subscription_env}"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.vnet.name
   route {
     name                   = "default"
     address_prefix         = "0.0.0.0/0"
     next_hop_type          = "VirtualAppliance"
-    next_hop_in_ip_address = "10.8.0.4"
+    next_hop_in_ip_address = var.rt_next_hop_ip
   }
 
   tags = local.sub_scope_tags
@@ -37,15 +43,15 @@ resource "azurerm_route_table" "rt" {
 
 # Create a subnet for devops resources ips
 locals {
-  vnet_cidr          = data.azurerm_virtual_network.vnet.address_space[0]
+  vnet_cidr          = var.vnet_address_space[0]
   cidrsubnet_newbits = 28 - tonumber(regex("\\d+$", local.vnet_cidr))
   subnet_cidr        = cidrsubnet(local.vnet_cidr, local.cidrsubnet_newbits, 0)
 }
 
 resource "azurerm_subnet" "devops" {
-  name                 = "subnet-${var.project_acronym}-devops-${subscription_env}"
-  resource_group_name  = var.vnet_rg
-  virtual_network_name = var.vnet_name
+  name                 = "subnet-${var.project_acronym}-devops-${var.subscription_env}"
+  resource_group_name  = azurerm_resource_group.vnet.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = [local.subnet_cidr]
   service_endpoints    = ["Microsoft.Storage", "Microsoft.KeyVault"]
 }
@@ -59,7 +65,7 @@ resource "azurerm_subnet_route_table_association" "devops" {
 # Create a resource group for devops resources (storage accounts, VMSS)
 resource "azurerm_resource_group" "devops" {
   name     = "rg-${var.project_acronym}-devops-${var.subscription_env}"
-  location = local.location
+  location = var.location
 
   tags = local.sub_scope_tags
 }

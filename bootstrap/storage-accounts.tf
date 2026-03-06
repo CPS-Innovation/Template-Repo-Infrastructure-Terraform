@@ -19,7 +19,7 @@ resource "azurerm_storage_account" "sa" {
 
   name                            = "sa${var.project_acronym}${each.value.purpose}${each.value.environment}"
   resource_group_name             = azurerm_resource_group.devops.name
-  location                        = local.location
+  location                        = var.location
   account_tier                    = "Standard"
   account_replication_type        = "LRS"
   min_tls_version                 = "TLS1_2"
@@ -30,7 +30,7 @@ resource "azurerm_storage_account" "sa" {
 
   network_rules {
     default_action = "Deny"
-    bypass         = "AzureServices"
+    bypass         = ["AzureServices"]
   }
 
   blob_properties {
@@ -53,7 +53,7 @@ resource "azurerm_private_endpoint" "sa" {
   for_each = local.sa_for_each
 
   name                = "pe-${azurerm_storage_account.sa[each.key].name}"
-  location            = local.location
+  location            = var.location
   resource_group_name = azurerm_resource_group.devops.name
   subnet_id           = azurerm_subnet.devops.id
 

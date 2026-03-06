@@ -6,7 +6,7 @@ IMPORTANT: DO NOT check your copy into source control as it may contain a sensit
 */
 
 # subscription_id     = # e.g. "aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e"
-# project_acronym     = # e.g. "CM" for Case Management
+# project_acronym     = # e.g. "cm" for Case Management
 # subscription_env    = # commonly used: "prod" |"preprod"
 # vnet_name           = # This is the name of an existing VNet created by the infra team upon request.
 # vnet_rg             = # This is the name of the existing RG containing the VNet
