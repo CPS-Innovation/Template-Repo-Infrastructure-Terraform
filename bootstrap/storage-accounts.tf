@@ -10,7 +10,8 @@ locals {
     { vmss = {
       purpose     = "bootdiag"
       environment = var.subscription_env
-    } }
+      }
+    }
   )
 }
 

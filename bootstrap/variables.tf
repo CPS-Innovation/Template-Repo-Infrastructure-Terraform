@@ -19,9 +19,22 @@ variable "subscription_env" {
   description = "The subscription environment, e.g 'prod' or 'preprod'."
 }
 
+variable "vnet_name" {
+  type        = string
+  description = "The name of a pre-existing VNet in the subscription."
+  default     = null
+}
+
+variable "vnet_rg" {
+  type        = string
+  description = "The name of the Resource Group where the pre-existing VNet is located."
+  default     = null
+}
+
 variable "vnet_address_space" {
   type        = list(string)
-  description = "The address space that has been allocated for the virtual network." 
+  description = "The address space that has been allocated for the virtual network."
+  nullable    = true
 }
 
 variable "rt_next_hop_ip" {
@@ -48,6 +61,6 @@ variable "vmss_sku" {
 }
 
 variable "ssh_public_key_path" {
-  type = string
+  type        = string
   description = "The path of a public key from an SSH key-pair to be used for admin access to VMs within the Scale Set. E.g. \"~/.ssh/my_ssh_key.pub\""
 }

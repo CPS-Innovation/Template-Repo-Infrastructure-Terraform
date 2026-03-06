@@ -8,7 +8,8 @@ IMPORTANT: DO NOT check your copy into source control as it may contain a sensit
 # subscription_id     = # e.g. "aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e"
 # project_acronym     = # e.g. "cm" for Case Management
 # subscription_env    = # commonly used: "prod" |"preprod"
-# vnet_name           = # This is the name of an existing VNet created by the infra team upon request.
-# vnet_rg             = # This is the name of the existing RG containing the VNet
+# vnet_name           = null # Change if a VNet has already been provisioned for the subscription
+# vnet_rg             = null # Change if an RG containing a VNet already exists in the subscription
+# vnet_address_space  = # e.g. ["10.0.0.0/24"] - use null if referencing a pre-existing VNet
 # sa_environments     = # commonly used: ["prod"] | ["dev", "staging"]
 # ssh_public_key_path = # e.g. "~/.ssh/vmssadmin_nonprod.pub"

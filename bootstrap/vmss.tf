@@ -7,11 +7,11 @@ resource "azurerm_ssh_public_key" "vmss_admin" {
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "devops" {
-  name                            = "vmss-${var.project_acronym}-devops-agents-${var.subscription_env}"
-  resource_group_name             = azurerm_resource_group.devops.name
-  location                        = var.location
-  sku                             = var.vmss_sku
-  admin_username                  = "vmssadmin-${var.project_acronym}-${var.subscription_env}"
+  name                = "vmss-${var.project_acronym}-devops-agents-${var.subscription_env}"
+  resource_group_name = azurerm_resource_group.devops.name
+  location            = var.location
+  sku                 = var.vmss_sku
+  admin_username      = "vmssadmin-${var.project_acronym}-${var.subscription_env}"
 
   admin_ssh_key {
     username   = "vmssadmin-${var.project_acronym}-${var.subscription_env}"
