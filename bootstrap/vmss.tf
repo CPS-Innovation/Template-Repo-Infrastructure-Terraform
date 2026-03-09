@@ -6,6 +6,15 @@ resource "azurerm_ssh_public_key" "vmss_admin" {
   public_key          = file(var.ssh_public_key_path)
 }
 
+
+resource "azurerm_network_security_group" "vmss" {
+  name                = "nsg-nic-vmss-devops-agents"
+  resource_group_name = azurerm_resource_group.devops.name
+  location            = var.location
+
+  tags = local.sub_scope_tags
+}
+
 resource "azurerm_linux_virtual_machine_scale_set" "devops" {
   name                = "vmss-${var.project_acronym}-devops-agents-${var.subscription_env}"
   resource_group_name = azurerm_resource_group.devops.name
@@ -33,6 +42,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "devops" {
   network_interface {
     name    = "nic-vmss-devops-agents"
     primary = true
+    network_security_group_id = azurerm_network_security_group.vmss.id
 
     ip_configuration {
       name      = "ipconfig-vmss-devops-agents"
