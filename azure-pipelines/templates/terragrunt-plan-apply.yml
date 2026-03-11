@@ -53,9 +53,10 @@ jobs:
         addSpnToEnvironment: true
         inlineScript: |
           echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(az account show --query id --output tsv)"
-          echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$servicePrincipalId"
-          echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET]$servicePrincipalKey"
           echo "##vso[task.setvariable variable=ARM_TENANT_ID]$tenantId"
+          echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$servicePrincipalId"
+          echo "##vso[task.setvariable variable=ARM_OIDC_TOKEN]$idToken"
+          echo "##vso[task.setvariable variable=ARM_USE_OIDC]true"
 
     - bash: |
         PLAN_PATH='$(System.DefaultWorkingDirectory)/environments/${{parameters.environment}}/${{parameters.module}}/tf.plan'

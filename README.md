@@ -14,9 +14,10 @@ This repository provides a standardized template for provisioning and managing i
 
 Before provisioning any environments, you must run the scripts in the `bootstrap/` folder to set up foundational infrastructure such as:
 
+- Networking components (virtual network, subnet, route table, private DNS)
 - A VMSS for Azure DevOps agents
 - A storage account for Terraform state
-- Networking components (subnet, route table, private DNS)
+
 
 See [bootstrap/README.md](bootstrap/README.md) for full instructions.
 

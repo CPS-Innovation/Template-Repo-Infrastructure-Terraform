@@ -19,24 +19,6 @@ variable "subscription_env" {
   description = "The subscription environment, e.g 'prod' or 'preprod'."
 }
 
-variable "vnet_name" {
-  type        = string
-  description = "The name of a pre-existing VNet in the subscription."
-  default     = null
-}
-
-variable "vnet_rg" {
-  type        = string
-  description = "The name of the Resource Group where the pre-existing VNet is located."
-  default     = null
-}
-
-variable "vnet_address_space" {
-  type        = list(string)
-  description = "The address space that has been allocated for the virtual network."
-  nullable    = true
-}
-
 variable "rt_next_hop_ip" {
   type        = string
   description = "The IP address of the virtual appliance via which to route all outbound traffic from the VNet. For services based in UK South, this will normally be \"10.8.0.4\" - the UKS Firewall."
@@ -63,4 +45,32 @@ variable "vmss_sku" {
 variable "ssh_public_key_path" {
   type        = string
   description = "The path of a public key from an SSH key-pair to be used for admin access to VMs within the Scale Set. E.g. \"~/.ssh/my_ssh_key.pub\""
+}
+
+/*
+Where a Virtual Network needs to be created using these scripts,
+an allocated IP address space must be set as the value for the following variable.  
+Otherwise, it must be set to null.
+*/
+variable "vnet_address_space" {
+  type        = list(string)
+  description = "The address space that has been allocated for the virtual network."
+  nullable    = true
+}
+
+/*
+Where a Virtual Network has already been provisioned in the subscription, 
+its details will need to be set as the following variable values.
+Otherwise, they must be set to null.
+*/
+variable "vnet_name" {
+  type        = string
+  description = "The name of a pre-existing VNet in the subscription."
+  default     = null
+}
+
+variable "vnet_rg" {
+  type        = string
+  description = "The name of the Resource Group where the pre-existing VNet is located."
+  default     = null
 }
