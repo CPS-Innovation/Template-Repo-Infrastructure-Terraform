@@ -22,6 +22,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "devops" {
   sku                 = var.vmss_sku
   admin_username      = "vmssadmin-${var.project_acronym}-${var.subscription_env}"
 
+  single_placement_group = false
+  overprovision          = false
+
   admin_ssh_key {
     username   = "vmssadmin-${var.project_acronym}-${var.subscription_env}"
     public_key = azurerm_ssh_public_key.vmss_admin.public_key
