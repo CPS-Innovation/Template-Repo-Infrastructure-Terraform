@@ -9,6 +9,12 @@ variable "location" {
   default     = "UK South"
 }
 
+variable "location_suffix" {
+  type        = string
+  description = "An optional suffix to append to resource names to differentiate between resources in different locations. E.g. \"uks\" for UK South, \"ukw\" for UK West."
+  default     = ""
+}
+
 variable "project_acronym" {
   type        = string
   description = "The abbreviated project name."
@@ -39,12 +45,28 @@ variable "sa_environments" {
 variable "vmss_sku" {
   type        = string
   description = "The SKU to use for instances in the VMSS."
-  default     = "Standard_D2s_v3"
+  default     = "Standard_D2s_v5"
 }
 
 variable "ssh_public_key_path" {
   type        = string
   description = "The path of a public key from an SSH key-pair to be used for admin access to VMs within the Scale Set. E.g. \"~/.ssh/my_ssh_key.pub\""
+}
+
+variable "vmss_image_ref" {
+  type        = object({
+    publisher = string
+    offer     = string
+    sku       = string
+    version   = string
+  })
+  description = "The source image reference to use for the VMSS instances."
+  default     = {
+    publisher = "Canonical"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
+    version   = "latest"
+  }
 }
 
 /*

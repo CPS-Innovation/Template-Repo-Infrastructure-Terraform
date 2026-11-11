@@ -1,11 +1,10 @@
 # Create a VMSS to be used as an Azure DevOps agent pool
 resource "azurerm_ssh_public_key" "vmss_admin" {
-  name                = "sshkey-vmss-${var.project_acronym}-devops-agents-${var.subscription_env}"
+  name                = "sshkey-vmss-${var.project_acronym}-devops-agents-${local.resource_suffix}"
   resource_group_name = azurerm_resource_group.devops.name
   location            = var.location
   public_key          = file(var.ssh_public_key_path)
 }
-
 
 resource "azurerm_network_security_group" "vmss" {
   name                = "nsg-nic-vmss-devops-agents"
@@ -16,25 +15,25 @@ resource "azurerm_network_security_group" "vmss" {
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "devops" {
-  name                = "vmss-${var.project_acronym}-devops-agents-${var.subscription_env}"
+  name                = "vmss-${var.project_acronym}-devops-agents-${local.resource_suffix}"
   resource_group_name = azurerm_resource_group.devops.name
   location            = var.location
   sku                 = var.vmss_sku
-  admin_username      = "vmssadmin-${var.project_acronym}-${var.subscription_env}"
+  admin_username      = "vmssadmin-${var.project_acronym}-${local.resource_suffix}"
 
   single_placement_group = false
   overprovision          = false
 
   admin_ssh_key {
-    username   = "vmssadmin-${var.project_acronym}-${var.subscription_env}"
+    username   = "vmssadmin-${var.project_acronym}-${local.resource_suffix}"
     public_key = azurerm_ssh_public_key.vmss_admin.public_key
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
-    version   = "latest"
+    publisher = var.vmss_image_ref.publisher
+    offer     = var.vmss_image_ref.offer
+    sku       = var.vmss_image_ref.sku
+    version   = var.vmss_image_ref.version
   }
 
   os_disk {

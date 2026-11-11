@@ -5,11 +5,13 @@ locals {
       for env in var.sa_environments : env => {
         purpose     = "tfstate"
         environment = "${env}"
+        replication = var.subscription_env == "prod" ? "RA-GRS" : "LRS"
       }
     }),
     { vmss = {
-      purpose     = "bootdiag"
-      environment = var.subscription_env
+        purpose     = "bootdiag"
+        environment = var.subscription_env
+        replication = "LRS"
       }
     }
   )
@@ -18,16 +20,19 @@ locals {
 resource "azurerm_storage_account" "sa" {
   for_each = local.sa_for_each
 
-  name                            = "sa${var.project_acronym}${each.value.purpose}${each.value.environment}"
+  name                            = "sa${var.project_acronym}${each.value.purpose}${each.value.environment}${var.location_suffix}"
   resource_group_name             = azurerm_resource_group.devops.name
   location                        = var.location
   account_tier                    = "Standard"
-  account_replication_type        = "LRS"
+  account_replication_type        = each.value.replication
   min_tls_version                 = "TLS1_2"
   public_network_access_enabled   = false
   allow_nested_items_to_be_public = false
   local_user_enabled              = false
   allowed_copy_scope              = "AAD"
+  # Shared key access should be manually changed to false after the initial creation 
+  # of the storage account, to prevent any future access via shared keys 
+  shared_access_key_enabled       = true
 
   network_rules {
     default_action = "Deny"

@@ -11,6 +11,7 @@ locals {
   )
   vnet_rg   = var.vnet_rg == null ? azurerm_resource_group.vnet[0].name : var.vnet_rg
   vnet_name = var.vnet_name == null ? azurerm_virtual_network.vnet[0].name : var.vnet_name
+  resource_suffix = var.location_suffix == "" ? var.subscription_env : "${var.subscription_env}-${var.location_suffix}"
 }
 
 # If a VNet has already been created for the subscription, use a data source to reference it:
@@ -25,7 +26,7 @@ data "azurerm_virtual_network" "vnet" {
 resource "azurerm_resource_group" "vnet" {
   count = var.vnet_rg == null ? 1 : 0
 
-  name     = "rg-${var.project_acronym}-connectivity-${var.subscription_env}"
+  name     = "rg-${var.project_acronym}-connectivity-${local.resource_suffix}"
   location = var.location
   tags     = local.sub_scope_tags
 }
@@ -33,7 +34,7 @@ resource "azurerm_resource_group" "vnet" {
 resource "azurerm_virtual_network" "vnet" {
   count = var.vnet_name == null ? 1 : 0
 
-  name                = "vnet-${var.project_acronym}-${var.subscription_env}"
+  name                = "vnet-${var.project_acronym}-${local.resource_suffix}"
   location            = var.location
   resource_group_name = azurerm_resource_group.vnet[0].name
   address_space       = var.vnet_address_space
@@ -43,7 +44,7 @@ resource "azurerm_virtual_network" "vnet" {
 
 # Create a route table for the subscription
 resource "azurerm_route_table" "rt" {
-  name                = "rt-${var.project_acronym}-${var.subscription_env}"
+  name                = "rt-${var.project_acronym}-${local.resource_suffix}"
   location            = var.location
   resource_group_name = local.vnet_rg
   route {
@@ -64,11 +65,11 @@ locals {
 }
 
 resource "azurerm_subnet" "devops" {
-  name                 = "subnet-${var.project_acronym}-devops-${var.subscription_env}"
+  name                 = "snet-${var.project_acronym}-devops-${local.resource_suffix}"
   resource_group_name  = local.vnet_rg
   virtual_network_name = local.vnet_name
   address_prefixes     = [local.subnet_cidr]
-  service_endpoints    = ["Microsoft.Storage", "Microsoft.KeyVault"]
+  service_endpoints    = ["Microsoft.Storage"]
 }
 
 # Associate the subnet with the route table
@@ -79,7 +80,7 @@ resource "azurerm_subnet_route_table_association" "devops" {
 
 # Create a resource group for devops resources (storage accounts, VMSS)
 resource "azurerm_resource_group" "devops" {
-  name     = "rg-${var.project_acronym}-devops-${var.subscription_env}"
+  name     = "rg-${var.project_acronym}-devops-${local.resource_suffix}"
   location = var.location
 
   tags = local.sub_scope_tags
